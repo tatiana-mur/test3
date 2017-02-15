@@ -1,7 +1,6 @@
 try {
     $branch = $args[0]
-    $releaseRegex = [regex] 'FDMBS_Release_*'
-    if (!($branch -match 'master' -Or $branch -cmatch $releaseRegex)) {
+    if (!($branch -match 'master')) {
         exit 0
     }
     $newVersion = [version] (Get-Content -Path ".\version.txt" -Raw)
