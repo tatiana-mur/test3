@@ -1,0 +1,2 @@
+## file contains patterns definitions for version file versioning
+version.txt,versionFilePattern
