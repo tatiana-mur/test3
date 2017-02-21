@@ -35,6 +35,7 @@ try {
            $newGitTagBranch = [string]::Format("PS_Release_{0}", $gitTagVersion)
            git checkout -b $newGitTagBranch
            git push origin $newGitTagBranch
+           git checkout master
         }
    } else {
         echo "Version already  defined [$newVersion]"
