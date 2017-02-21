@@ -32,12 +32,14 @@ try {
         # Push changes back to GitHub
         git push --set-upstream origin --tags HEAD
         # Create a branch if on master
-        if ($branch -cmatch 'master') {
-           $newGitTagBranch = [string]::Format("PS_Release_{0}", $gitTagVersion)
-           git checkout -b $newGitTagBranch
-           git push origin $newGitTagBranch
-           git checkout master
-        }
+            try {
+              $newGitTagBranch = [string]::Format("FDMBS_Release_{0}", $gitTagVersion)
+              git checkout -b $newGitTagBranch
+              git push origin $newGitTagBranch
+            } Finally {
+               git checkout master
+            }
+            git checkout master
    } else {
         echo "Version already  defined [$newVersion]"
    }
