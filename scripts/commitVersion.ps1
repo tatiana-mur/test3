@@ -1,5 +1,7 @@
+ #
  # This script is used in Teamcity by the Agent > CI (Windows) to commit version.txt and cut release branch from master
  # it is accepts branch name and mode parrern(master or PS_Release_* as inputs)
+ #
 try {
     $branch = $args[0]
     $mode = $args[1]
@@ -27,7 +29,12 @@ try {
         # Git setup - key, name, email
         git config user.name "TeamCity Agent"
         git config user.email "gc-ci@grabcad.com"
-    
+        
+        # making sure, nothing else is staged, since we dont want to trigger infinite updates on TC
+        git reset
+        if ($LastExitCode -ne 0) {
+            throw "Failed reset changed. [$LastExitCode]."
+        }
         git add version.txt
         if ($LastExitCode -ne 0) {
             throw "Failed to add version.txt $LastExitCode."
