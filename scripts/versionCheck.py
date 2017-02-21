@@ -1,10 +1,14 @@
 
-# NB: This script is shared with the eagle-printer-service repo. If you make
-# changes to it here, you should also change it there.
+# NB: This script is shared with the FDM_Build repo. If you make changes to it
+# here, you should also change it there.
 # TODO: Make a repo/package for tools like this to avoid redundancy.
 
 Usage = """
-    python versioncheck.py patternsFile
+    python versioncheck.py [versionFile] [--release]? [patternsFile]...
+    versionFile : string
+        Master version file
+    --release : optional string
+        Switches to release versioning check (does not ignore 3rd number)
     patternsFile : string
         Path to a file containing a version patterns.
 """
@@ -18,19 +22,16 @@ if __name__ == '__main__':
     if '--help' in sys.argv:
         print 'Usage:' + Usage
         exit(0)
-    checkType = None
-    for i in range(1,len(sys.argv)):
-        if sys.argv[i] in checkOptions:
-            checkType = sys.argv[i]
-            break
-    #get list of all files with patterns
-    files = [arg for arg in sys.argv[1:] if arg not in checkOptions]
-    code = 0
-    if len(files) > 0:
-        patterns = versionUtils.loadVersionsPatterns(files)
-        if checkType == None:
-             code = versionUtils.checkVersions(patterns)
-        else:
-             code = versionUtils.checkReleaseVersions(patterns)
-    exit(code)
+    
+    options = []
+    files = []
+    # triage non-scriptname args
+    for arg in sys.argv[1:]:
+        (options if arg in checkOptions else files).append(arg)
+    
+    exitCode = 0
+    if len(files) > 1:
+        patterns = versionUtils.loadVersionLocations(files)
+        exitCode = versionUtils.checkVersions(patterns[0], patterns[1:], len(options) != 0)
+    exit(exitCode)
 

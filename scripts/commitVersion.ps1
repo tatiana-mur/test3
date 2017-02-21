@@ -1,7 +1,18 @@
 try {
     $branch = $args[0]
-    $releaseRegex = [regex] 'FDMBS_Release_*'
-    if (!($branch -match 'master' -Or $branch -cmatch $releaseRegex)) {
+    $mode = $args[1]
+    if (!($mode -cmatch 'master' -Or $mode -cmatch 'PS_Release_*')) {
+        echo "Invalid autobump mode [$mode]"
+        exit 1
+    }
+    $modeRegex = [regex] $mode
+    if (!($branch -cmatch $modeRegex)) {
+        exit 0
+    }
+    $currentBranch (git rev-parse --abbrev-ref HEAD) | Out-String
+    $currentBranch = $currentBranch.Trim()
+    if (!($branch -cmatch $currentBranch)) {
+        echo "Branch does [$branch] not match [$currentBranch]"
         exit 0
     }
     $newVersion = [version] (Get-Content -Path ".\version.txt" -Raw) 
@@ -19,6 +30,12 @@ try {
         git tag -a $gitTagVersion -m $gitTagVersion
         # Push changes back to GitHub
         git push --set-upstream origin --tags HEAD
+        # Create a branch if on master
+        if ($branch -cmatch 'master') {
+           $newGitTagBranch = [string]::Format("PS_Release_{0}", $gitTagVersion)
+           git checkout -b $newGitTagBranch
+           git push origin $newGitTagBranch
+        }
    } else {
         echo "Version already  defined [$newVersion]"
    }
