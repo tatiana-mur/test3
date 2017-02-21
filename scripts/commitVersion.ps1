@@ -9,7 +9,7 @@ try {
     if (!($branch -cmatch $modeRegex)) {
         exit 0
     }
-    $currentBranch (git rev-parse --abbrev-ref HEAD) | Out-String
+    $currentBranch = (git rev-parse --abbrev-ref HEAD) | Out-String
     $currentBranch = $currentBranch.Trim()
     if (!($branch -cmatch $currentBranch)) {
         echo "Branch does [$branch] not match [$currentBranch]"
