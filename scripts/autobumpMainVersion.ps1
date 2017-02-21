@@ -1,4 +1,5 @@
 # This script is used in Teamcity by the Agent > CI (Windows) to update version.txt
+# it is accepts branch name and mode parrern(master or PS_Release_* as inputs)
 try {
     $branch = $args[0]
     $mode = $args[1]
