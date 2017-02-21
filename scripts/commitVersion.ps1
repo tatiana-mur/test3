@@ -7,6 +7,7 @@ try {
     }
     $modeRegex = [regex] $mode
     if (!($branch -cmatch $modeRegex)) {
+        echo "Branch does [$branch] not match mode [$mode]"
         exit 0
     }
     $currentBranch = (git rev-parse --abbrev-ref HEAD) | Out-String
