@@ -1,5 +1,5 @@
  #
- # This script is used in Teamcity by the Agent > CI (Windows) to commit version.txt and cut release branch from master
+ # This script is used in Teamcity by by the Printer Service > Printer Service Windows Build and Release Build (Windows) to commit version.txt and cut release branch from master
  # it is accepts branch name and mode parrern(master or PS_Release_* as inputs)
  #
 try {
@@ -20,7 +20,9 @@ try {
         echo "Branch does [$branch] not match [$currentBranch]"
         exit 0
     }
-    $newVersion = [version] (Get-Content -Path ".\version.txt" -Raw) 
+    $content = (Get-Content -Path ".\version.txt" -Raw);
+    $newVersion = [version] $content.Trim();
+    echo "New version [$newVersion]"
     $modifiedVersion = (git status --porcelain version.txt) | Out-String     
     $modifiedVersion = $modifiedVersion.Trim()
     if ($modifiedVersion.contains("version.txt")) { 
