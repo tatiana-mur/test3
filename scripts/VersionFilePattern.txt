@@ -1,2 +1,3 @@
 ## file contains patterns definitions for version file versioning
+##dfjdjfjkfjdkfddffdf
 version.txt,versionFilePattern
